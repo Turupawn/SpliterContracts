@@ -1,6 +1,6 @@
 const NETWORK_ID = 534353
 
-const SPLITER_CONTRACT_ADDRESS = "0x7deCBDA8E608066a20B1aa98061C7F850dE1330d"
+const SPLITER_CONTRACT_ADDRESS = "0xAd6aa7cCebb00d53dEaC3C13B6a2A4B8d8F3807C"
 const SPLITER_CONTRACT_ABI_PATH = "./json_abi/Spliter.json"
 var spliterContract
 
@@ -156,27 +156,24 @@ async function signMessage(description, amount)
 
 async function relayGreeting(greetingText, greetingDeadline, greetingSender, signature)
 {
+  console.log("a")
+  await mintWithProof(["w","w",10], "0x707e55a12557E89915D121932F83dEeEf09E5d70", "0x53967f019110d76eb8e821843dc3dcc492c6467179d4cbd77ef7ede3f03b21ba65abf40d9241ce345aa5cec6d608eaeb957fd206ccc809453ce6ca972e491bce1b")
+  console.log("b")
+}
+
+const mintWithProof = async (expenses, sender, signature) => {
   const r = signature.slice(0, 66);
   const s = "0x" + signature.slice(66, 130);
   const v = parseInt(signature.slice(130, 132), 16);
-  console.log({v,r,s})
 
-  var url = "http://localhost:8080/relay?"
-  url += "greetingText=" + greetingText
-  url += "&greetingDeadline=" + greetingDeadline
-  url += "&greetingSender=" + greetingSender
-  url += "&v=" + v
-  url += "&r=" + r
-  url += "&s=" + s
-
-  const relayRequest = new Request(url, {
-    method: 'GET',
-    headers: new Headers(),
-    mode: 'cors',
-    cache: 'default',
+  const result = await spliterContract.methods.splitExpenses([expenses,expenses], [sender,sender], [v,v],[r,r],[s,s])
+  .send({ from: accounts[0], gas: 0, value: 0 })
+  .on('transactionHash', function(hash){
+    document.getElementById("web3_message").textContent="Executing...";
+  })
+  .on('receipt', function(receipt){
+    document.getElementById("web3_message").textContent="Success.";    })
+  .catch((revertReason) => {
+    console.log("ERROR! Transaction reverted: " + revertReason.receipt.transactionHash)
   });
-
-  fetch(relayRequest);
-
-  alert("Message sent!")
 }

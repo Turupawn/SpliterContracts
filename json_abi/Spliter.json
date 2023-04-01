@@ -19,32 +19,32 @@
 						"type": "uint256"
 					}
 				],
-				"internalType": "struct Spliter.Expense",
-				"name": "expense",
-				"type": "tuple"
+				"internalType": "struct Spliter.Expense[]",
+				"name": "expenses",
+				"type": "tuple[]"
 			},
 			{
-				"internalType": "address",
+				"internalType": "address[]",
 				"name": "sender",
-				"type": "address"
+				"type": "address[]"
 			},
 			{
-				"internalType": "uint8",
+				"internalType": "uint8[]",
 				"name": "v",
-				"type": "uint8"
+				"type": "uint8[]"
 			},
 			{
-				"internalType": "bytes32",
+				"internalType": "bytes32[]",
 				"name": "r",
-				"type": "bytes32"
+				"type": "bytes32[]"
 			},
 			{
-				"internalType": "bytes32",
+				"internalType": "bytes32[]",
 				"name": "s",
-				"type": "bytes32"
+				"type": "bytes32[]"
 			}
 		],
-		"name": "greet",
+		"name": "splitExpenses",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -88,6 +88,19 @@
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalAmount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

@@ -1,6 +1,6 @@
 const NETWORK_ID = 534353
 
-const SPLITER_CONTRACT_ADDRESS = "0xAd6aa7cCebb00d53dEaC3C13B6a2A4B8d8F3807C"
+const SPLITER_CONTRACT_ADDRESS = "0x3F2FF862c047013457311B9642A41B1988AbB77d"
 const SPLITER_CONTRACT_ABI_PATH = "./json_abi/Spliter.json"
 var spliterContract
 
@@ -115,7 +115,7 @@ const onWalletConnectedCallback = async () => {
 
 // Sign and Relay functions
 
-async function signMessage(description, amount)
+async function signMessage(group, description, amount)
 {
   const msgParams = JSON.stringify({
     types: {
@@ -139,7 +139,7 @@ async function signMessage(description, amount)
         verifyingContract: SPLITER_CONTRACT_ADDRESS,
     },
     message: {
-        group: description,
+        group: group,
         description: description,
         amount: amount,
     },
@@ -154,19 +154,36 @@ async function signMessage(description, amount)
   document.getElementById("signature").textContent="Signature: " + signature;
 }
 
-async function relayGreeting(greetingText, greetingDeadline, greetingSender, signature)
+async function split()
 {
-  console.log("a")
-  await mintWithProof(["w","w",10], "0x707e55a12557E89915D121932F83dEeEf09E5d70", "0x53967f019110d76eb8e821843dc3dcc492c6467179d4cbd77ef7ede3f03b21ba65abf40d9241ce345aa5cec6d608eaeb957fd206ccc809453ce6ca972e491bce1b")
-  console.log("b")
+  var expenses = []
+  expenses.push(["1","2",3])
+
+  var senders = []
+  senders.push("0x707e55a12557E89915D121932F83dEeEf09E5d70")
+
+  var vs = []
+  var rs = []
+  var ss = []
+  var signature = "0xcd275d809982d81844bd73101b6f67802fde400bfee0bb93546983b1b1f80c7a66f77ce5257da17e7c34e55401d4ef56bca7e2a46d1371344b6c233ca6855d561b"
+  var r = signature.slice(0, 66);
+  var s = "0x" + signature.slice(66, 130);
+  var v = parseInt(signature.slice(130, 132), 16);
+  rs.push(r)
+  ss.push(s)
+  vs.push(v)
+
+  senders.push()
+  await splitExpenses(
+    expenses,
+    senders,
+    vs,
+    rs,
+    ss)
 }
 
-const mintWithProof = async (expenses, sender, signature) => {
-  const r = signature.slice(0, 66);
-  const s = "0x" + signature.slice(66, 130);
-  const v = parseInt(signature.slice(130, 132), 16);
-
-  const result = await spliterContract.methods.splitExpenses([expenses,expenses], [sender,sender], [v,v],[r,r],[s,s])
+const splitExpenses = async (expenses, senders, vs, rs, ss) => {
+  const result = await spliterContract.methods.splitExpenses(expenses, senders, vs, rs, ss)
   .send({ from: accounts[0], gas: 0, value: 0 })
   .on('transactionHash', function(hash){
     document.getElementById("web3_message").textContent="Executing...";

@@ -1,8 +1,8 @@
 const NETWORK_ID = 534353
 
-const GREETER_CONTRACT_ADDRESS = "0x8Cf91fFCdE414EDa468c4d3821a0987B92721C20"
-const GREETER_CONTRACT_ABI_PATH = "./json_abi/Greeter.json"
-var greeterContract
+const SPLITER_CONTRACT_ADDRESS = "0x7deCBDA8E608066a20B1aa98061C7F850dE1330d"
+const SPLITER_CONTRACT_ABI_PATH = "./json_abi/Spliter.json"
+var spliterContract
 
 var accounts
 var web3
@@ -65,7 +65,7 @@ async function loadDapp() {
     web3.eth.net.getId((err, netId) => {
       if (netId == NETWORK_ID) {
         var awaitContract = async function () {
-          greeterContract = await getContract(web3, GREETER_CONTRACT_ADDRESS, GREETER_CONTRACT_ABI_PATH)
+          spliterContract = await getContract(web3, SPLITER_CONTRACT_ADDRESS, SPLITER_CONTRACT_ABI_PATH)
           document.getElementById("web3_message").textContent="You are connected to Metamask"
           onContractInitCallback()
           web3.eth.getAccounts(function(err, _accounts){
@@ -101,8 +101,8 @@ async function connectWallet() {
 loadDapp()
 
 const onContractInitCallback = async () => {
-  var greetingText = await greeterContract.methods.greetingText().call()
-  var greetingSender = await greeterContract.methods.greetingSender().call()
+  var greetingText = await spliterContract.methods.greetingText().call()
+  var greetingSender = await spliterContract.methods.greetingSender().call()
 
   var contract_state = "Greeting Text: " + greetingText
     + ", Greeting Setter: " + greetingSender
@@ -115,7 +115,7 @@ const onWalletConnectedCallback = async () => {
 
 // Sign and Relay functions
 
-async function signMessage(message, deadline)
+async function signMessage(description, amount)
 {
   const msgParams = JSON.stringify({
     types: {
@@ -125,23 +125,23 @@ async function signMessage(message, deadline)
             { name: 'chainId', type: 'uint256' },
             { name: 'verifyingContract', type: 'address' },
         ],
-        Greeting: [
+        Expense: [
             { name: 'group', type: 'string' },
-            { name: 'text', type: 'string' },
-            { name: 'deadline', type: 'uint' }
+            { name: 'description', type: 'string' },
+            { name: 'amount', type: 'uint' }
         ],
     },
-    primaryType: 'Greeting',
+    primaryType: 'Expense',
     domain: {
         name: 'Ether Mail',
         version: '1',
         chainId: NETWORK_ID,
-        verifyingContract: GREETER_CONTRACT_ADDRESS,
+        verifyingContract: SPLITER_CONTRACT_ADDRESS,
     },
     message: {
-        group: message,
-        text: message,
-        deadline: deadline,
+        group: description,
+        description: description,
+        amount: amount,
     },
   });
   console.log(msgParams)

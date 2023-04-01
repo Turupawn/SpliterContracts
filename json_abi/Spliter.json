@@ -4,9 +4,9 @@
 			{
 				"components": [
 					{
-						"internalType": "uint256",
-						"name": "groupId",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "group",
+						"type": "string"
 					},
 					{
 						"internalType": "string",
@@ -44,57 +44,7 @@
 				"type": "bytes32"
 			}
 		],
-		"name": "addExpense",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"components": [
-					{
-						"internalType": "uint256",
-						"name": "groupId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "description",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct Spliter.Expense[]",
-				"name": "expense",
-				"type": "tuple[]"
-			},
-			{
-				"internalType": "address[]",
-				"name": "sender",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint8[]",
-				"name": "v",
-				"type": "uint8[]"
-			},
-			{
-				"internalType": "bytes32[]",
-				"name": "r",
-				"type": "bytes32[]"
-			},
-			{
-				"internalType": "bytes32[]",
-				"name": "s",
-				"type": "bytes32[]"
-			}
-		],
-		"name": "splitExpenses",
+		"name": "greet",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -106,12 +56,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "amount",
+		"name": "greetingSender",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "address",
 				"name": "",
-				"type": "uint256"
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -119,7 +69,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "description",
+		"name": "greetingText",
 		"outputs": [
 			{
 				"internalType": "string",
@@ -132,12 +82,12 @@
 	},
 	{
 		"inputs": [],
-		"name": "totalo",
+		"name": "group",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "string",
 				"name": "",
-				"type": "uint256"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -148,9 +98,9 @@
 			{
 				"components": [
 					{
-						"internalType": "uint256",
-						"name": "groupId",
-						"type": "uint256"
+						"internalType": "string",
+						"name": "group",
+						"type": "string"
 					},
 					{
 						"internalType": "string",

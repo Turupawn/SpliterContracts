@@ -7,9 +7,16 @@
   <div>
     <input id="connect_button" type="button" value="Connect" onclick="connectWallet()" style="display: none"></input>
     <p id="account_address" style="display: none"></p>
-    <h1>Greeter Verifier</h1>
+    <button type="button" id="sign" onclick="_approve()">Approve</button>
+    <h1>Spliter</h1>
     <p id="web3_message"></p>
     <p id="contract_state"></p>
+    <h3>Add to group</h3>
+    <span>Group</span><br>
+    <input type="text" id="_groupAddGroup"></input><br>
+    <span>Participant</span><br>
+    <input type="text" id="_participantAddGroup"></input><br>
+    <button type="button" id="sign" onclick="_addParticipant()">Add Participant</button>
     <h3>Sign Greeting</h3>
     <span>Group</span><br>
     <input type="text" id="_group"></input><br>
@@ -40,6 +47,18 @@
 </body>
 
   <script>
+    function _addParticipant()
+    {
+      _groupAddGroup = document.getElementById("_groupAddGroup").value
+      _participantAddGroup = document.getElementById("_participantAddGroup").value
+      addParticipant(_groupAddGroup, _participantAddGroup)
+    }
+
+    function _approve()
+    {
+      approve()
+    }
+
     function _signMessage()
     {
       _group = document.getElementById("_group").value
@@ -47,7 +66,6 @@
       _amount = document.getElementById("_amount").value
       signMessage(_group, _description, _amount)
     }
-
     
     function _split()
     {

@@ -1,8 +1,11 @@
 const NETWORK_ID = 534353
 
-const SPLITER_CONTRACT_ADDRESS = "0x3F2FF862c047013457311B9642A41B1988AbB77d"
+const SPLITER_CONTRACT_ADDRESS = "0x04Ad210Fa4Baa7b44f3993c94993fd4Fc0aFDA14"
+const SUSD_CONTRACT_ADDRESS = "0xA501d054Cd417a656eeF60C455757CAC1dA741c1"
 const SPLITER_CONTRACT_ABI_PATH = "./json_abi/Spliter.json"
+const SUSD_CONTRACT_ABI_PATH = "./json_abi/SUSD.json"
 var spliterContract
+var sUSDContract
 
 var accounts
 var web3
@@ -66,6 +69,7 @@ async function loadDapp() {
       if (netId == NETWORK_ID) {
         var awaitContract = async function () {
           spliterContract = await getContract(web3, SPLITER_CONTRACT_ADDRESS, SPLITER_CONTRACT_ABI_PATH)
+          sUSDContract = await getContract(web3, SUSD_CONTRACT_ADDRESS, SUSD_CONTRACT_ABI_PATH)
           document.getElementById("web3_message").textContent="You are connected to Metamask"
           onContractInitCallback()
           web3.eth.getAccounts(function(err, _accounts){
@@ -101,13 +105,16 @@ async function connectWallet() {
 loadDapp()
 
 const onContractInitCallback = async () => {
-  var greetingText = await spliterContract.methods.greetingText().call()
-  var greetingSender = await spliterContract.methods.greetingSender().call()
+  //var greetingText = await spliterContract.methods.greetingText().call()
+  //document.getElementById("contract_state").textContent = contract_state;
 
-  var contract_state = "Greeting Text: " + greetingText
-    + ", Greeting Setter: " + greetingSender
-
-  document.getElementById("contract_state").textContent = contract_state;
+  var signature = "0xa095bf3bfa3477f1f4ae3c7185e69d9228acad8c4e29899b65a9f9b8a2b400471cbf7ab2ade7d56d1cb8d9aa11a6c61abdeb52e93924174481b06d2a83bdb8cd1c"
+  var r = signature.slice(0, 66);
+  var s = "0x" + signature.slice(66, 130);
+  var v = parseInt(signature.slice(130, 132), 16);
+  console.log(v)
+  console.log(r)
+  console.log(s)
 }
 
 const onWalletConnectedCallback = async () => {
@@ -157,23 +164,31 @@ async function signMessage(group, description, amount)
 async function split()
 {
   var expenses = []
-  expenses.push(["1","2",3])
+  expenses.push(["a","x1",100])
+  expenses.push(["a","x2",50])
 
   var senders = []
   senders.push("0x707e55a12557E89915D121932F83dEeEf09E5d70")
+  senders.push("0xbef34f2FCAe62dC3404c3d01AF65a7784c9c4A19")
 
   var vs = []
   var rs = []
   var ss = []
-  var signature = "0xcd275d809982d81844bd73101b6f67802fde400bfee0bb93546983b1b1f80c7a66f77ce5257da17e7c34e55401d4ef56bca7e2a46d1371344b6c233ca6855d561b"
+  var signature = "0x0d836cc54e59b4d20a0f40495f9095ca037392d46a8aa2450118023c8ac447e360238bdb57e24ffa1f321dae123d9fea423673d8c9df4da863b8bb0afc895aa31b"
   var r = signature.slice(0, 66);
   var s = "0x" + signature.slice(66, 130);
   var v = parseInt(signature.slice(130, 132), 16);
   rs.push(r)
   ss.push(s)
   vs.push(v)
+  var signature = "0x8fdd7eb4b1eaa5ab0263bf1470219cdf082029f89702847fd543e6cb6d9b18d26dc86ce921ae7c547c294187757f92f955032faadf3b6658227e5503cd3936fb1c"
+  r = signature.slice(0, 66);
+  s = "0x" + signature.slice(66, 130);
+  v = parseInt(signature.slice(130, 132), 16);
+  rs.push(r)
+  ss.push(s)
+  vs.push(v)
 
-  senders.push()
   await splitExpenses(
     expenses,
     senders,
@@ -184,6 +199,36 @@ async function split()
 
 const splitExpenses = async (expenses, senders, vs, rs, ss) => {
   const result = await spliterContract.methods.splitExpenses(expenses, senders, vs, rs, ss)
+  .send({ from: accounts[0], gas: 0, value: 0 })
+  .on('transactionHash', function(hash){
+    document.getElementById("web3_message").textContent="Executing...";
+  })
+  .on('receipt', function(receipt){
+    document.getElementById("web3_message").textContent="Success.";    })
+  .catch((revertReason) => {
+    console.log("ERROR! Transaction reverted: " + revertReason.receipt.transactionHash)
+  });
+}
+
+const addParticipant = async (group, account) => {
+  const result = await spliterContract.methods.addParticipant(goup, account)
+  .send({ from: accounts[0], gas: 0, value: 0 })
+  .on('transactionHash', function(hash){
+    document.getElementById("web3_message").textContent="Executing...";
+  })
+  .on('receipt', function(receipt){
+    document.getElementById("web3_message").textContent="Success.";    })
+  .catch((revertReason) => {
+    console.log("ERROR! Transaction reverted: " + revertReason.receipt.transactionHash)
+  });
+}
+
+const approve = async () => {
+  console.log(sUSDContract)
+  const result = await sUSDContract.methods.approve(
+    SPLITER_CONTRACT_ADDRESS,
+    web3.utils.toWei('9999999999', 'ether')
+  )
   .send({ from: accounts[0], gas: 0, value: 0 })
   .on('transactionHash', function(hash){
     document.getElementById("web3_message").textContent="Executing...";

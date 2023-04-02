@@ -17,7 +17,7 @@
 				"type": "address"
 			}
 		],
-		"name": "addPartitipant",
+		"name": "addParticipant",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
